@@ -43,19 +43,19 @@ class Arena {
    * @param {String} direction
    * @returns Object with Number
    */
-  move(direction) {
-    let y = this.hero.y;
-    let x = this.hero.x;
-    if (direction === "N") this.hero.y -= 1;
-    if (direction === "S") this.hero.y += 1;
-    if (direction === "E") this.hero.x -= 1;
-    if (direction === "W") this.hero.x += 1;
+  move(direction, fighter) {
+    let y = fighter.y;
+    let x = fighter.x;
+    if (direction === "N") fighter.y -= 1;
+    if (direction === "S") fighter.y += 1;
+    if (direction === "E") fighter.x -= 1;
+    if (direction === "W") fighter.x += 1;
 
-    const tile = this.getTile(this.hero.x, this.hero.y);
+    const tile = this.getTile(fighter.x, fighter.y);
 
-    if (!this.checkOnMap(this.hero.x, this.hero.y)) {
+    if (!this.checkOnMap(fighter.x, fighter.y)) {
       this.message = "Moving outside the map is not possible";
-    } else if (this.CheckNoMonster(this.hero)) {
+    } else if (this.CheckNoMonster(fighter)) {
       this.message = "Position already used, you can t move here";
     } else if (tile[0] && !tile[0].crossable) {
       this.message = "Moving over is not possible";
@@ -64,8 +64,8 @@ class Arena {
     }
 
     document.getElementById('error').innerHTML = this.message;
-    this.hero.x = x;
-    this.hero.y = y;
+    fighter.x = x;
+    fighter.y = y;
   }
 
   /**
@@ -74,8 +74,24 @@ class Arena {
    * @param {Object} hero
    */
   globalMove(direction, hero) {
-    this.move(direction);
+    this.move(direction, hero);
+    this.monsters.map((monster) => {
+      if (monster.moveable) {
+        this.move(this.getDirection(), monster);
+      }
+    })
+
   }
+
+  /**
+   * Generate Random Direction
+   * @param {String} direction
+   */
+  getDirection() {
+    const directions = ['N', 'S', 'W', 'E'];
+    return directions[Math.floor(Math.random() * 4)];
+  }
+
 
   /**
    * Check if the coordinate are on the map
@@ -94,7 +110,7 @@ class Arena {
    * @returns Boolean
    */
   CheckNoMonster(fighter) {
-    return this.monsters.some(monster => monster.isAlive() && (monster.x === fighter.x && monster.y === fighter.y))
+    return this.monsters.some(monster => monster.isAlive() && (monster.x === fighter.x && monster.y === fighter.y) && monster !== fighter)
   }
 
   /**

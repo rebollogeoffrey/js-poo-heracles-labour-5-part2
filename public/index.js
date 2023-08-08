@@ -2,7 +2,7 @@
 const heracles = new Hero('👨 Heracles', 0, 0);
 
 /** Creating his weapon and associating it */
-const bow = new Weapon('bow', 8, './images/bow.svg', 1);
+const bow = new Weapon('bow', 8, './images/bow.svg', 10);
 heracles.weapon = bow;
 
 /** Creating his shield and associating it */
@@ -11,7 +11,8 @@ heracles.shield = shield;
 
 
 /** Creating all of his adversaries */
-const Ceryneian = new Monster('🐴 Ceryneian Hind', 9, 6);
+const Ceryneian = new Hind('🐴 Ceryneian Hind', 9, 6);
+const Ceryneian22 = new Hind('🐴 Ceryneian Hind', 8, 6);
 
 /** Creating the hero section in the html */
 const fighterHtml = new FightersTemplate('fighters');
@@ -19,7 +20,7 @@ fighterHtml.createTemplate(heracles, Ceryneian);
 
 
 /** Creating the arena place  */
-const arena = new Arena(heracles, [Ceryneian])
+const arena = new Arena(heracles, [Ceryneian, Ceryneian22])
 const ArenaHTML = new ArenaTemplate('arena');
 ArenaHTML.setMoveEvent(arena);
 ArenaHTML.setMonsterClick(arena);
